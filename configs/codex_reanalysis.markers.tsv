@@ -1,0 +1,5 @@
+marker_id	ucd1_2_contig	ucd1_2_position	ucd2_0_contig	citation	notes
+rs110616206	chr22	27162840	NC_037349.1	Takeshima et al. 2017 Retrovirology 14:24 (PMID:28376881)	CNTN3 intron; BTA22 BLV-PVL GWAS SNP, OR=6.589 in the original 676-animal cohort
+rs29026690	chr23	27603651	NC_037350.1	Published BoLA class III BLV-PVL GWAS SNP	ABHD16A intron; r2=0.74 with DRB3*016:01 in the legacy 13-animal ARS-UCD1.2 analysis
+rs17872126	chr23	28419662	NC_037350.1	Published BoLA class I-proximal BLV-PVL GWAS SNP	PRR3/GNL1 region; independent of *016:01 in the legacy analysis (r2<=0.13)
+TNF_824	chr23	27719770	NC_037350.1	Konnai et al. 2006 Microbes Infect 8:2163-2171 (doi:10.1016/j.micinf.2006.04.017)	TNF promoter -824A/G; position located by aligning the original amplicon (GenBank Z14137) to the BTA23 reference (see docs/CLASSIII_016_TAG_SNP_EXPLORATION.md #6); legacy ONT dosage calls at this exact position were unstable

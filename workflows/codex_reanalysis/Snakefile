@@ -1,0 +1,174 @@
+"""Isolated ARS-UCD2.0 reanalysis workflow entry point."""
+
+import csv
+import sys
+from pathlib import Path
+
+
+configfile: "configs/codex_reanalysis.example.yaml"
+
+
+PROJECT_ROOT = Path(workflow.basedir).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
+# Import the BED names rather than repeating them: sealing or filtering on
+# the other file fails only once a multi-day cohort has started.
+from scripts.codex_reanalysis.coordinate_registry import (
+    ANALYTICAL_BED_NAME,
+    MAPPING_BED_NAME,
+)
+OUTPUT_ROOT = "results/codex_reanalysis_v1"
+AUDIT_ROOT = f"{OUTPUT_ROOT}/00_input_audit"
+NORMALIZED_ROOT = f"{OUTPUT_ROOT}/00b_normalized"
+REFERENCE_ROOT = f"{OUTPUT_ROOT}/01_reference"
+MAPPING_ROOT = f"{OUTPUT_ROOT}/02_mapping"
+DEPTH_ROOT = f"{OUTPUT_ROOT}/03_depth_cnv"
+MARKERS_ROOT = f"{OUTPUT_ROOT}/04_small_variants"
+SV_ROOT = f"{OUTPUT_ROOT}/05_sv"
+ASSEMBLY_ROOT = f"{OUTPUT_ROOT}/06_local_assembly"
+
+# Cohort read-length floor. Eleven deliverables carry a 500 bp floor from the
+# vendor; two were rebuilt after corruption and lost it. The threshold lives
+# here rather than in the run configuration so that the configuration hash and
+# the reference seal stay identical between the pilot and the cohort, keeping
+# the two directly comparable. It is recorded in the normalisation status,
+# provenance and every manifest row.
+MINIMUM_READ_LENGTH = 500
+
+
+with (PROJECT_ROOT / "data" / "meta" / "samplesheet.tsv").open(
+    encoding="utf-8", newline=""
+) as handle:
+    _SAMPLE_ROWS = list(csv.DictReader(handle, delimiter="\t"))
+SAMPLES = [
+    row["sample_id"].strip()
+    for row in _SAMPLE_ROWS
+    if row.get("sample_id", "").strip()
+]
+if len(SAMPLES) != 13 or len(set(SAMPLES)) != 13:
+    raise WorkflowError("planned cohort must contain exactly 13 unique sample IDs")
+PILOT_SAMPLES = [SAMPLES[1], SAMPLES[0]]
+
+
+include: "rules/mapping.smk"
+include: "rules/depth.smk"
+include: "rules/small_variants.smk"
+include: "rules/coding_variants.smk"
+include: "rules/sv.smk"
+include: "rules/assembly.smk"
+
+
+rule all:
+    input:
+        expand(f"{MAPPING_ROOT}/{{sample}}.mapping_status.json", sample=SAMPLES),
+
+
+rule mapping_all:
+    input:
+        expand(f"{MAPPING_ROOT}/{{sample}}.mapping_status.json", sample=SAMPLES),
+
+
+rule mapping_pilot:
+    input:
+        expand(f"{MAPPING_ROOT}/{{sample}}.mapping_status.json", sample=PILOT_SAMPLES),
+
+
+rule pilot:
+    input:
+        rules.mapping_pilot.input,
+
+
+rule depth_all:
+    input:
+        rules.normalize_depth.output.matrix,
+        rules.normalize_depth.output.report,
+
+
+rule small_variants_all:
+    input:
+        rules.audit_published_markers.output.matrix,
+        rules.audit_published_markers.output.report,
+
+
+rule coding_variants_all:
+    input:
+        rules.merge_coding_variants.output.table,
+        rules.merge_coding_variants.output.report,
+
+
+# Not wired into evidence_audit yet: envs/sv.yaml has not been exercised
+# through `snakemake --use-conda`, and adding an unbuildable target to a
+# shared aggregate rule would make that rule unrunnable for every other
+# stage (mapping/depth/markers) until it has been.
+rule sv_all:
+    input:
+        rules.merge_sv_evidence.output.table,
+        rules.merge_sv_evidence.output.report,
+
+
+# Not wired into evidence_audit yet: Flye uses its own prefix, and class I
+# recovery must be reviewed before it can gate other stages.
+rule class_i_all:
+    input:
+        rules.assembly_qc_class_i.output.table,
+        rules.assembly_qc_class_i.output.report,
+
+
+rule dq_dr_all:
+    input:
+        rules.assembly_qc_dq_dr.output.table,
+        rules.assembly_qc_dq_dr.output.report,
+
+
+rule wide_all:
+    input:
+        rules.assembly_qc_wide.output.table,
+        rules.assembly_qc_wide.output.report,
+
+
+rule assembly_all:
+    input:
+        rules.class_i_all.input,
+        rules.dq_dr_all.input,
+        rules.wide_all.input,
+
+
+rule evidence_audit:
+    input:
+        rules.mapping_all.input,
+        rules.depth_all.input,
+        rules.small_variants_all.input,
+
+
+FIGURE_BASE_NAMES = [
+    "Figure1_BoLA_framework",
+    "Figure2_DQ_reference_and_assembly",
+    "Figure3_BTN_depth_heterogeneity",
+    "Figure4_classI_depth_variation",
+    "Figure5_DQ_by_DRB3_016",
+    "Figure6_GWAS_marker_context",
+    "Figure7_correlation_phase_unresolved",
+    "FigureS1_classIII_exploratory",
+]
+MANUSCRIPT_ROOT = f"{OUTPUT_ROOT}/08_manuscript"
+
+
+rule package_manuscript:
+    input:
+        f"{OUTPUT_ROOT}/07_evidence_audit/evidence_matrix_status.json",
+        "results/chatgpt_figure_reanalysis/figure_qa.json",
+        "results/chatgpt_figure_reanalysis/export_manifest.json",
+        "results/chatgpt_figure_reanalysis/plot_data.json",
+        expand("docs/chatgpt_figures_submission/{name}.svg", name=FIGURE_BASE_NAMES),
+    output:
+        status=f"{MANUSCRIPT_ROOT}/manuscript_status.json",
+    params:
+        project=str(PROJECT_ROOT),
+    shell:
+        "python3 {params.project}/scripts/codex_reanalysis/package_manuscript.py "
+        "--repo-root {params.project} --force"
+
+
+rule manuscript:
+    input:
+        rules.evidence_audit.input,
+        rules.package_manuscript.output.status,

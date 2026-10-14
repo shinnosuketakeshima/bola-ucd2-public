@@ -1,0 +1,7 @@
+field	value
+title	Long-read whole-genome sequencing of the BoLA region in Japanese Black cattle
+organism	Bos taurus
+project_data_type	Genome Sequencing
+relevance	Agricultural
+description	Untargeted long-read whole-genome sequencing of 13 Japanese Black (Wagyu) cattle using Oxford Nanopore PromethION sequencers, generated to resolve the structure, copy-number variation, and haplotype organisation of the bovine major histocompatibility complex (BoLA) region on chromosome 23, including the classical class I and class II (DRB3/DQ) loci and their linkage. The cohort was ascertained to include animals carrying the BoLA-DRB3*016:01 allele. Reads support a manuscript reporting corrected BoLA gene coordinates and structural variation on the ARS-UCD2.0 reference assembly. Public sample identifiers are manuscript IDs ID01–ID13; geographic origin is reported at the country level (Japan) only, without farm, prefecture, or owner identifying information.
+release	Hold until publication of the linked DRA records

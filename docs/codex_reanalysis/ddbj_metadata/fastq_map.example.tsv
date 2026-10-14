@@ -1,0 +1,14 @@
+manuscript_id	fastq
+ID01	/path/on/analysis/host/ID01.analytical.fastq.gz
+ID02	/path/on/analysis/host/ID02.analytical.fastq.gz
+ID03	/path/on/analysis/host/ID03.analytical.fastq.gz
+ID04	/path/on/analysis/host/ID04.analytical.fastq.gz
+ID05	/path/on/analysis/host/ID05.analytical.fastq.gz
+ID06	/path/on/analysis/host/ID06.analytical.fastq.gz
+ID07	/path/on/analysis/host/ID07.analytical.fastq.gz
+ID08	/path/on/analysis/host/ID08.analytical.fastq.gz
+ID09	/path/on/analysis/host/ID09.analytical.fastq.gz
+ID10	/path/on/analysis/host/ID10.analytical.fastq.gz
+ID11	/path/on/analysis/host/ID11.analytical.fastq.gz
+ID12	/path/on/analysis/host/ID12.analytical.fastq.gz
+ID13	/path/on/analysis/host/ID13.analytical.fastq.gz

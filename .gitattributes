@@ -1,0 +1,21 @@
+# Keep generated and office assets out of text diffs.
+*.docx binary
+*.pdf binary
+*.pptx binary
+*.png binary
+*.jpg binary
+*.svg binary
+
+# Normalize repository source text across platforms.
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.tsv text eol=lf
+*.csv text eol=lf
+*.smk text eol=lf
+*.lock text eol=lf
+Snakefile text eol=lf
+*.sh text eol=lf
+*.ps1 text eol=lf

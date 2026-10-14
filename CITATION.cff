@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Analysis code for the long-read characterization of the BoLA region in Japanese Black cattle"
+type: software
+license: MIT
+authors:
+  - family-names: Takeshima
+    given-names: Shin-nosuke
+    affiliation: "Jumonji University, Japan"
+  - family-names: Saito
+    given-names: Susumu
+    affiliation: "Jumonji University, Japan"
+  - family-names: Giovambattista
+    given-names: Guillermo
+    affiliation: "La Plata University, Argentina"
+  - family-names: Aida
+    given-names: Yoko
+    affiliation: "The University of Tokyo, Japan"
+repository-code: "https://github.com/shinnosuketakeshima/bola-ucd2-public"
+keywords:
+  - Oxford Nanopore
+  - BoLA
+  - MHC
+  - Bos taurus
+  - Japanese Black cattle

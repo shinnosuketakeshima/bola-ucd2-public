@@ -1,0 +1,12 @@
+# Python 依存（Snakemake 以外のスクリプト用）
+pyyaml>=6.0
+pandas>=2.0
+
+# DRB3 exon-2 typing (scripts/codex_reanalysis/drb3_exon2_typing.py)
+edlib>=1.3.9
+
+# Test dependency for repository privacy-policy checks.
+pytest>=8.0
+
+# オプション（BLV 表現型解析テンプレート）
+# statsmodels>=0.14

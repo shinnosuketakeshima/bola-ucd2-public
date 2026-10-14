@@ -1,0 +1,11 @@
+name: codex-reanalysis-typing
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.13
+  - samtools=1.23.1
+  # Edit distance for the DRB3 exon-2 typing stage; recorded in provenance.
+  - edlib
+  - pyyaml=6.0.2
+  - git

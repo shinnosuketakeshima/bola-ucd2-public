@@ -1,0 +1,16 @@
+name: codex-reanalysis-sv
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.13
+  - samtools=1.23.1
+  - git
+  - pip
+  # Sniffles2 is pip-only pinned here (rather than bioconda) because 2.8.0
+  # is the exact version the VCF parser in merge_sv_evidence.py was checked
+  # against (see the fixture in tests/codex_reanalysis/test_sv_evidence.py);
+  # a version bump is a pin change here plus a re-check of that fixture, not
+  # a silent upgrade.
+  - pip:
+      - sniffles==2.8.0
