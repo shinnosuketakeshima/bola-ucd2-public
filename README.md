@@ -14,7 +14,12 @@ the manuscript IDs ID01-ID13.
 ## Contents
 
 - `scripts/codex_reanalysis/`: pipeline stages (input audit, reference registry, streaming target
-  mapping, depth/CNV, DRB3 exon-2 typing, evidence matrix, DDBJ worksheets).
+  mapping, depth/CNV, DRB3 exon-2 typing, evidence matrix, DDBJ worksheets), and the analyses added in
+  the October 2026 revision: placement of assembled DQ sequences and read support for DQ
+  configurations (`attribute_dq_contigs.py`), comparison of configuration A junctions
+  (`compare_dq_junctions.py`) and of published assemblies (`compare_public_dq_configurations.py`),
+  Additional file 2 (`build_additional_file_2.py`), coding-variant re-genotyping, phase blocks, BTN
+  split reads, and TLR/TRIM summaries.
 - `workflows/codex_reanalysis/`: Snakemake rules and conda environments.
 - `run_remote/`: guarded scripts for the remote mapping host.
 - `configs/`: configuration template, target and marker lists, sample-sheet schema.
